@@ -1,0 +1,45 @@
+@use "../utils/functions" as *;
+@use "../utils/variables" as *;
+@use "../utils/mixins" as *;
+
+@use "../shared/grids" as *;
+
+.preloader {
+  @extend %center;
+
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  background-color: $color-herare;
+  z-index: z("preloader");
+  // pointer-events: none;
+}
+.preloader__wrapper {
+  @extend %gird-4;
+
+  height: 50vh;
+  width: 100%;
+  padding: $gutter-10;
+}
+
+.preloader__media {
+  overflow: hidden;
+  border-radius: 0.5rem;
+  clip-path: inset(0% 0% 100% 0%);
+  position: relative;
+}
+
+.preloader__media__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+
+  &.second__image {
+    z-index: 1;
+  }
+}

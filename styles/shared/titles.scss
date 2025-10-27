@@ -1,0 +1,9 @@
+@use "../utils/variables" as *;
+
+%title-60 {
+  font-size: 6rem;
+  line-height: 1.1;
+  font-weight: 400;
+
+  font-family: $font-pp-editorial-new;
+}

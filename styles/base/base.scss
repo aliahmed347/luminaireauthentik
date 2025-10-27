@@ -1,0 +1,32 @@
+@use "../utils/variables" as *;
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  background-color: $color-herare;
+  color: $color-blackish-brown;
+  font-size: calc(100vw / 1440 * 10);
+  line-height: 1;
+}
+
+body {
+  font-family: $font-dm-sans;
+
+  position: relative;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.content {
+  margin-top: 6rem;
+}
