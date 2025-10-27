@@ -1,0 +1,13 @@
+@use "../utils/variables" as *;
+
+%gird-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: $gutter-10;
+}
+
+%gird-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: $gutter-10;
+}
