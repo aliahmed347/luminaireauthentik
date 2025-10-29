@@ -12,7 +12,9 @@
   position: fixed;
   background-color: $color-herare;
   z-index: z("preloader");
-  // pointer-events: none;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 .preloader__wrapper {
   @extend %gird-4;
