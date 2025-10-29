@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import { each } from "lodash"
 
 export default class Component {

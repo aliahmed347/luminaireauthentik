@@ -9,7 +9,6 @@
   left: 0;
   width: 100%;
   padding: 1rem;
-  
 }
 
 .navigation__wrapper {
@@ -78,13 +77,15 @@
       .navigation__hamburger {
         background-color: $color-herare;
         height: 0;
-        transform-origin: left;
+        transform-origin: center;
 
         &::after {
           transform: rotate(40deg);
+          bottom: 0;
         }
         &::before {
           transform: rotate(-40deg);
+          top: -1px;
         }
       }
     }
@@ -109,11 +110,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-
-        &:first-child {
-        }
-        &:last-child {
-        }
       }
     }
 
@@ -133,7 +129,7 @@
         height: 0.1rem;
         width: 3.2rem;
         background-color: inherit;
-        transform-origin: left;
+        transform-origin: center;
         transition: inherit;
       }
 

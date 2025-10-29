@@ -138,6 +138,7 @@ export default class Preloader extends Component {
 
 
     destroy() {
+        // this.emit('completed')
         this.element.parentNode.removeChild(this.element)
     }
 
