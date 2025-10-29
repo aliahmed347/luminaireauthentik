@@ -4,6 +4,7 @@ import Preloader from "./components/Preloader"
 
 class App {
     constructor() {
+
         this.createContent()
 
         this.createPreloader()
@@ -20,6 +21,10 @@ class App {
 
     createPreloader() {
         this.preloader = new Preloader()
+        // this.preloader.once('completed', this.onPreloader.bind(this))
+    }
+
+    onPreloader() {
     }
 
     createNavigation() {
