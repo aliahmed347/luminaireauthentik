@@ -8,7 +8,7 @@ class App {
 
         this.createContent()
 
-        // this.createPreloader()
+        this.createPreloader()
 
         this.createNavigation()
         this.createPages()
