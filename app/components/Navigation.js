@@ -34,9 +34,8 @@ export default class Navigation extends Component {
             { scaleY: 0 },
             {
                 scaleY: 1,
-                duration: 0.5,
-                delay: 0.3,
-                ease: "power3.inOut",
+                duration: 1,
+                ease: "power2.inOut",
             },
             "<"
         );
