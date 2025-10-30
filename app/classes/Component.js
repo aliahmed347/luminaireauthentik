@@ -8,7 +8,7 @@ export default class Component {
 
         this.create()
 
-        // this.addEventListeners()
+        this.addEventListeners()
     }
 
     create() {
