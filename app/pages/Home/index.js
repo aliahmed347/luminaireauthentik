@@ -1,6 +1,6 @@
 import Page from "../../components/Page";
 import Hero from "../../sections/Hero"
-import LeftContentRightImage from "../../sections/leftContentRightImage";
+import LeftContentRightImage from "../../sections/LeftContentRightImage";
 
 export default class Home extends Page {
 
