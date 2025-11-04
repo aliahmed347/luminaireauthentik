@@ -31,8 +31,8 @@ export default class Hero extends Component {
         this.setupActiveSlide();
         this.splitText();
         this.addEventListeners();
-        this.animateIn(true);
-        // this.startAutoPlay();
+        this.animateIn();
+        this.startAutoPlay();
     }
 
     collectSlidesData() {
@@ -155,22 +155,22 @@ export default class Hero extends Component {
 
         nextButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                // this.stopAutoPlay();
+                this.stopAutoPlay();
                 this.nextSlide();
-                // this.startAutoPlay();
+                this.startAutoPlay();
             });
         });
 
         previousButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                // this.stopAutoPlay();
+                this.stopAutoPlay();
                 this.previousSlide();
-                // this.startAutoPlay();
+                this.startAutoPlay();
             });
         });
     }
 
-    animateIn(isFirstLoad = false) {
+    animateIn() {
         const tl = gsap.timeline();
 
         // Animate label words in with stagger (normal order: first to last)
@@ -195,38 +195,31 @@ export default class Hero extends Component {
             }, index * 0.08 + 0.2);
         });
 
-        // Only animate images with clip-path if not first load
-        if (!isFirstLoad) {
-            // Reveal images with clip-path from right to left
-            tl.fromTo(this.slideImage, {
-                clipPath: 'inset(0 100% 0 0)',
-            }, {
-                clipPath: 'inset(0 0% 0 0)',
-                duration: 1.4,
-                ease: 'expo.inOut',
-                onComplete: () => {
-                    // Remove temporary images after animation
-                    this.removeTempImages();
-                }
-            }, 0);
+        // Reveal images with clip-path from right to left and scale from 105%
+        tl.fromTo(this.slideImage, {
+            clipPath: 'inset(0 100% 0 0)',
+            scale: 1.5
+        }, {
+            clipPath: 'inset(0 0% 0 0)',
+            scale: 1,
+            duration: 1.4,
+            ease: 'expo.inOut',
+            onComplete: () => {
+                // Remove temporary images after animation
+                this.removeTempImages();
+            }
+        }, 0);
 
-            tl.fromTo(this.slideFooterImage, {
-                clipPath: 'inset(0 100% 0 0)',
-            }, {
-                clipPath: 'inset(0 0% 0 0)',
-                duration: 1.4,
-                ease: 'expo.inOut'
-            }, 0.1);
-        } else {
-            // First load - simple fade in
-            tl.fromTo([this.slideImage, this.slideFooterImage], {
-                opacity: 0,
-            }, {
-                opacity: 1,
-                duration: 1.2,
-                ease: 'power3.out'
-            }, 0.3);
-        }
+        tl.fromTo(this.slideFooterImage, {
+            clipPath: 'inset(0 0 100% 0)',
+            scale: 1.5
+        }, {
+            clipPath: 'inset(0 0 0% 0)',
+            scale: 1,
+            duration: 1.4,
+            ease: 'expo.inOut'
+        }, 0.1);
+
 
         // Fade in CTA
         tl.fromTo(this.sliderCta, {
@@ -288,19 +281,23 @@ export default class Hero extends Component {
             }
         });
 
-        // Reveal images with clip-path from right to left
+        // Reveal images with clip-path from right to left AND scale from 105% to 100%
         tl.fromTo(this.slideImage, {
             clipPath: 'inset(0 100% 0 0)',
+            scale: 1.05
         }, {
             clipPath: 'inset(0 0% 0 0)',
+            scale: 1,
             duration: 1.2,
             ease: 'power1.in'
         }, 0);
 
         tl.fromTo(this.slideFooterImage, {
             clipPath: 'inset(0 0 100% 0)',
+            scale: 1.05
         }, {
             clipPath: 'inset(0 0 0% 0)',
+            scale: 1,
             duration: 1.2,
             ease: 'power1.in'
         }, 0.1);
@@ -309,6 +306,10 @@ export default class Hero extends Component {
     }
 
     createTempImages() {
+        // Get current dimensions before creating temp images
+        const mainImageRect = this.slideImage.getBoundingClientRect();
+        const footerImageRect = this.slideFooterImage.getBoundingClientRect();
+
         // Create temporary image for main slide image
         this.tempSlideImage = document.createElement('img');
         this.tempSlideImage.src = this.slideImage.src;
@@ -355,34 +356,29 @@ export default class Hero extends Component {
         }
     }
 
-    updateContent(index) {
-        const data = this.slidesData[index];
-
-        // Update text content (using innerHTML to preserve any HTML tags)
-        this.slideLabel.innerHTML = data.label;
-        this.slideTitle.innerHTML = data.title;
-
-        // Update images - new images will be positioned on top
-        this.slideImage.src = data.image;
-        this.slideFooterImage.src = data.footerImage;
-
-        // Update CTA
-        this.sliderCta.href = data.ctaHref;
-        this.sliderCta.querySelector('span').setAttribute('data-text', data.ctaText);
-        this.sliderCta.querySelector('span').textContent = data.ctaText;
-
-        // Re-split and wrap text for new content
-        this.splitText();
+    preloadImage(src) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve();
+            img.onerror = () => resolve(); // Resolve even on error to prevent hanging
+            img.src = src;
+        });
     }
 
-    changeSlide(newIndex) {
-        // Create temporary images BEFORE transition
-        this.createTempImages();
-
+    async changeSlide(newIndex) {
         // Get the data for new slide
         const data = this.slidesData[newIndex];
 
-        // Update image sources immediately
+        // Preload new images before starting transition
+        await Promise.all([
+            this.preloadImage(data.image),
+            this.preloadImage(data.footerImage)
+        ]);
+
+        // Create temporary images BEFORE transition
+        this.createTempImages();
+
+        // Update image sources immediately after preload
         this.slideImage.src = data.image;
         this.slideFooterImage.src = data.footerImage;
 
@@ -470,7 +466,7 @@ export default class Hero extends Component {
     }
 
     destroy() {
-        // this.stopAutoPlay();
+        this.stopAutoPlay();
         this.removeTempImages();
         if (this.labelWordsWrapped && this.titleLinesWrapped) {
             gsap.killTweensOf([...this.labelWordsWrapped, ...this.titleLinesWrapped, this.slideImage, this.slideFooterImage, this.sliderCta]);

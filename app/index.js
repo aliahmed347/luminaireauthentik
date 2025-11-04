@@ -11,7 +11,7 @@ class App {
         this.createPreloader()
 
         this.createNavigation()
-        this.createPages()
+
     }
 
 
@@ -30,8 +30,13 @@ class App {
     }
 
     createPreloader() {
-        this.preloader = new Preloader()
-        // this.preloader.once('completed', this.onPreloader.bind(this))
+        // this.preloader = new Preloader()
+        // this.preloader.once('completed', () => this.createPages());
+        this.createPages()
+    }
+
+    onPreloader() {
+        this.page.show()
     }
 
     createNavigation() {

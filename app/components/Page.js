@@ -1,5 +1,5 @@
 import AsyncLoad from "./AsyncLoad";
-
+import GSAP from "gsap";
 export default class Page {
 
     constructor({ element, elements, id }) {

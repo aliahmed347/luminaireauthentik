@@ -22,5 +22,8 @@
     "sass": "^1.93.2",
     "vite": "^7.1.12",
     "vite-plugin-imagemin": "^0.6.1"
+  },
+  "dependencies": {
+    "events": "^3.3.0"
   }
 }

@@ -1,0 +1,70 @@
+@use "../utils/variables" as *;
+
+@use "../shared/grids" as *;
+@use "../shared/titles" as *;
+
+.left__title__image__right__image {
+  @extend %grid-12;
+
+  padding: $gutter-20 $gutter-10 0;
+
+  .left__title__image__wrapper {
+    grid-column: 1/7;
+
+    .left__title {
+      @extend %title-60;
+
+      margin-bottom: 0.6em;
+
+      // For animation wrapper
+      .line {
+        overflow: hidden;
+
+        .line__inner {
+          display: inline-block;
+        }
+      }
+    }
+
+    .small__image__container {
+      @extend %grid-6;
+
+      margin-top: 13rem;
+
+      .small__image__media {
+        grid-column: 3/6;
+        overflow: hidden;
+        border-radius: 0.5rem;
+
+        &__image {
+          width: 100%;
+          height: auto;
+          max-height: 100%;
+          display: block;
+        }
+      }
+    }
+  }
+
+  .right__image__wrapper {
+    grid-column: 7/13;
+
+    .right__image__wrapper__container {
+      @extend %grid-6;
+
+      .right__image__media {
+        grid-column: 1/-1;
+        overflow: hidden;
+        margin-top: 21rem;
+        border-radius: 0.5rem;
+
+        &__image {
+          width: 100%;
+          height: auto;
+          max-height: 100%;
+          display: block;
+        }
+      }
+    }
+  }
+}

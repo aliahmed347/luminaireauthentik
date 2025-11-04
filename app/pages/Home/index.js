@@ -1,5 +1,6 @@
 import Page from "../../components/Page";
 import Hero from "../../sections/Hero"
+import LeftContentRightImage from "../../sections/leftContentRightImage";
 
 export default class Home extends Page {
 
@@ -18,6 +19,11 @@ export default class Home extends Page {
 
         new Hero()
 
+        new LeftContentRightImage()
+
     }
 
+    addEventListeners() { }
+
 }
+
