@@ -30,9 +30,9 @@ class App {
     }
 
     createPreloader() {
-        // this.preloader = new Preloader()
-        // this.preloader.once('completed', () => this.createPages());
-        this.createPages()
+        this.preloader = new Preloader()
+        this.preloader.once('completed', () => this.createPages());
+        // this.createPages()
     }
 
     onPreloader() {

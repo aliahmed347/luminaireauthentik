@@ -1,0 +1,31 @@
+@use "../utils/variables" as *;
+
+@use "../shared/titles" as *;
+
+.quote__images__trail {
+  margin-top: 11rem;
+  padding-top: 20rem;
+  padding-bottom: 15rem;
+  background-color: $color-frontier-fort;
+  width: 100%;
+
+  .quote__images__trail__wrapper {
+    max-width: 122.4rem;
+    margin: auto;
+    text-align: center;
+
+    .quote__title {
+      @extend %title-110;
+
+      color: $color-herare;
+    }
+
+    .quote__buttons {
+      margin-top: 2.7rem;
+
+      .btn:last-child {
+        margin-left: 0.9rem;
+      }
+    }
+  }
+}
