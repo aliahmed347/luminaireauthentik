@@ -3,6 +3,8 @@
 @use "../shared/grids" as *;
 @use "../shared/titles" as *;
 
+@use "../shared/productButton.scss" as *;
+
 .left__title__image__right__image {
   @extend %grid-12;
 
@@ -51,6 +53,8 @@
 
     .right__image__wrapper__container {
       @extend %grid-6;
+
+      position: relative;
 
       .right__image__media {
         grid-column: 1/-1;

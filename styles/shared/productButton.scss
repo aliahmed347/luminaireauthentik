@@ -1,0 +1,87 @@
+@use "../shared/descriptions" as *;
+
+@use "../utils/variables.scss" as *;
+
+.product__button {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+
+  .product__button__inner {
+    background: white;
+    border-radius: 0.5rem;
+    width: 10rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+
+    .product__info {
+      display: flex;
+      align-items: center;
+
+      .product__image {
+        min-width: 8rem;
+        max-width: 8rem;
+        aspect-ratio: 1;
+        margin: 1rem;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      .product__content {
+        margin-right: 1rem;
+
+        .product__title {
+          @extend %description-17;
+
+          width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+        .product__price {
+          @extend %description-15;
+
+          display: inline-block;
+          width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+      }
+    }
+    .product__links {
+      @extend %description-15;
+      height: 0;
+      opacity: 0;
+
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 0.1rem solid $color-frontier-fort;
+      transition: all 0.2s ease;
+
+      .product__links__btn {
+        padding: 1.4rem 2rem;
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+        color: inherit;
+        font-size: inherit;
+        line-height: 1;
+        color: blank;
+        white-space: nowrap;
+
+        &:hover {
+          background: $color-apricot-ice;
+          color: $color-blackish-brown;
+        }
+      }
+
+      .customize__btn {
+        border-right: 0.1rem solid $color-frontier-fort;
+      }
+    }
+  }
+}

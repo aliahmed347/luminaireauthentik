@@ -16,7 +16,9 @@ export default class LeftContentRightImage extends Component {
                 smallImage: '.small__image__media__image',
                 largeImage: ".right__image__media__image",
                 smallImageMedia: '.small__image__media',
-                largeImageMedia: '.right__image__media'
+                largeImageMedia: '.right__image__media',
+                productButtonInner: '.product__button__inner',
+                productLinks: '.product__links'
             }
         });
 
@@ -29,6 +31,7 @@ export default class LeftContentRightImage extends Component {
         this.splitText();
         this.setupAnimations();
         this.setupImageHover();
+        this.setUpProductButtonHover();
     }
 
     splitText() {
@@ -84,8 +87,8 @@ export default class LeftContentRightImage extends Component {
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: this.element,
-                start: 'top 80%',
-                end: 'top 20%',
+                start: 'top 20%',
+                end: 'top 80%',
                 toggleActions: 'play none none none',
             }
         });
@@ -150,6 +153,61 @@ export default class LeftContentRightImage extends Component {
         container.addEventListener('mouseleave', () => {
             hoverImg.style.opacity = 0;
         });
+    }
+
+    setUpProductButtonHover() {
+
+        const buttonInner = this.elements.productButtonInner;
+        const productLinks = this.elements.productLinks;
+
+        gsap.set(buttonInner, {
+            width: '10rem',
+            overflow: 'hidden'
+        });
+
+        gsap.set(productLinks, {
+            height: '0',
+            opacity: 0,
+            overflow: 'hidden'
+        });
+
+
+
+        buttonInner.addEventListener('mouseenter', () => {
+
+            gsap.to(buttonInner, {
+                width: '100%',
+                opacity: 1,
+                duration: 0.3,
+                ease: 'power1.out'
+            });
+            gsap.to(productLinks, {
+                height: 'auto',
+                opacity: 1,
+                duration: 0.3,
+                ease: 'power1.out'
+            });
+
+        });
+
+        buttonInner.addEventListener('mouseleave', () => {
+
+            gsap.to(buttonInner, {
+                width: '10rem',
+                opacity: 1,
+                duration: 0.3,
+                ease: 'power1.out'
+            });
+
+            gsap.to(productLinks, {
+                height: '0',
+                opacity: 1,
+                duration: 0.1,
+                ease: 'power1.out'
+            });
+
+        });
+
     }
 
 
