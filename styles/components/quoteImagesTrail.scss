@@ -8,6 +8,7 @@
   padding-bottom: 15rem;
   background-color: $color-frontier-fort;
   width: 100%;
+  position: relative;
 
   .quote__images__trail__wrapper {
     max-width: 122.4rem;
@@ -18,6 +19,15 @@
       @extend %title-110;
 
       color: $color-herare;
+
+      // For animation wrapper
+      .line {
+        overflow: hidden;
+
+        .line__inner {
+          display: inline-block;
+        }
+      }
     }
 
     .quote__buttons {
@@ -26,6 +36,20 @@
       .btn:last-child {
         margin-left: 0.9rem;
       }
+    }
+  }
+
+  .trail__images {
+    // Container will be positioned via JavaScript
+    // Images will be absolutely positioned inside
+    width: auto;
+    height: auto;
+
+    img {
+      // Individual image styling handled by JavaScript
+      display: block;
+      width: 24.7rem;
+      height: 24.7rem;
     }
   }
 }

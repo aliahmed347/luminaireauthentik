@@ -1,6 +1,7 @@
 import Page from "../../components/Page";
 import Hero from "../../sections/Hero"
 import LeftContentRightImage from "../../sections/LeftContentRightImage";
+import QuoteImagesTrail from "../../sections/QuoteImagesTrail";
 
 export default class Home extends Page {
 
@@ -20,6 +21,8 @@ export default class Home extends Page {
         new Hero()
 
         new LeftContentRightImage()
+
+        new QuoteImagesTrail()
 
     }
 
