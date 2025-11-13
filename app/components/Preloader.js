@@ -113,25 +113,29 @@ export default class Preloader extends Component {
 
             this.timeline.to(this.elements.preloaderMediaImages[3], {
                 clipPath: 'inset(100% 0% 0% 0%)',
-                duration: 1.5,
-                delay: 1
+                duration: 2,
+                delay: 1,
+                ease: 'expo.inOut',
             })
 
             this.timeline.to(this.elements.preloaderMediaImages[1], {
                 clipPath: 'inset(100% 0% 0% 0%)',
-                duration: 1.5
-            }, '-=1.5')
+                duration: 2,
+                ease: 'expo.inOut',
+            }, '-=1.9')
 
             this.timeline.to(this.elements.preloaderMediaImages[2], {
                 clipPath: 'inset(100% 0% 0% 0%)',
-                duration: 1.5
-            }, '-=1.4')
+                duration: 2,
+                ease: 'expo.inOut',
+            }, '-=1.8')
 
             this.timeline.to(this.elements.preloaderMediaImages[0], {
                 clipPath: 'inset(100% 0% 0% 0%)',
-                duration: 1.5,
+                duration: 2,
+                ease: 'expo.inOut',
                 onComplete: () => resolve()
-            }, '-=1.3')
+            }, '-=1.7')
 
         })
     }

@@ -170,7 +170,7 @@ export default class QuoteImagesTrail extends Component {
         imgElement.style.zIndex = '100';
         imgElement.style.transform = 'translate(-50%, -50%)';
 
-        document.body.appendChild(imgElement);
+        this.element.appendChild(imgElement);
 
         // Get last position (so we can animate from there)
         const { x: lastX, y: lastY } = this.lastMousePosition;
