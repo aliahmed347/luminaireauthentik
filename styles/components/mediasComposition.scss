@@ -1,13 +1,14 @@
 .medias__composition {
   width: 100%;
-  height: min(100vh, 80000vw / 1440);
+  //   height: min(100vh, 80000vw / 1440);
+  height: min(100vh, 80000vw / 100vw);
   position: relative;
   overflow: hidden;
 
   .medias__composition__parallax {
     position: absolute;
-    height: calc(100% + 180px);
-    top: -180px;
+    height: calc(100% + 18rem);
+    top: -18rem;
     left: 0;
     width: 100%;
     background-image: url("../../assets/images/parallax-background.webp");
@@ -24,8 +25,8 @@
     z-index: 2;
 
     .medias__composition__video {
-      width: 347px;
-      height: 347px;
+      width: 34.7rem;
+      height: 34.7rem;
       object-fit: cover;
       position: absolute;
       top: 50%;
