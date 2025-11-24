@@ -36,7 +36,7 @@
       .small__image__media {
         grid-column: 3/6;
         overflow: hidden;
-        border-radius: 0.5rem;
+       border-radius: $rounded-5;
 
         &__image {
           width: 100%;
@@ -60,7 +60,7 @@
         grid-column: 1/-1;
         overflow: hidden;
         margin-top: 21rem;
-        border-radius: 0.5rem;
+       border-radius: $rounded-5;
 
         &__image {
           width: 100%;

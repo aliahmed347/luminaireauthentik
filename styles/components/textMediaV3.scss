@@ -1,0 +1,70 @@
+@use "../utils/variables" as *;
+
+@use "../shared/titles" as *;
+@use "../shared/descriptions" as *;
+
+.text__media__v3 {
+  margin-top: 11rem;
+  
+  .text__media__v3__container {
+    display: flex;
+
+    & > * {
+      width: 50%;
+    }
+
+    .left__content__section {
+      background: $color-sedona-stone;
+      padding-inline: 11.8rem;
+      display: flex;
+      justify-content: center;
+
+      .left__content__wrapper {
+        padding: 9rem 0;
+        text-align: center;
+        width: 100%;
+
+        .left__content__heading {
+          @extend %title-60;
+
+          color: $color-apricot-ice;
+          margin-bottom: 0.6em;
+        }
+
+        .left__content__media {
+          margin-bottom: 5rem;
+          overflow: hidden;
+
+          img {
+           border-radius: $rounded-5;
+            width: 45.4rem;
+          }
+        }
+
+        .left__content__text {
+          @extend %description-15;
+
+          color: $color-apricot-ice;
+          margin-bottom: 3rem;
+        }
+      }
+    }
+
+    .right__image__section {
+      position: relative;
+
+      .right__image__media {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%; // Make image fill container
+          object-fit: cover; // Maintain aspect ratio while filling
+          display: block; // Remove inline spacing
+        }
+      }
+    }
+  }
+}

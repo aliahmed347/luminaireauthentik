@@ -7,28 +7,29 @@
 .preloader {
   @extend %center;
 
-  width: 100svw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   position: fixed;
   background-color: $color-herare;
   z-index: z("preloader");
   top: 0;
   left: 0;
-  pointer-events: none;
+  // pointer-events: none;
 }
 .preloader__wrapper {
   @extend %grid-4;
 
-  height: 50vh;
+  // height: 50vh;
   width: 100%;
   padding: $gutter-10;
 }
 
 .preloader__media {
   overflow: hidden;
-  border-radius: 0.5rem;
+  border-radius: $rounded-5;
   clip-path: inset(0% 0% 100% 0%);
   position: relative;
+  aspect-ratio: 0.74;
 }
 
 .preloader__media__image {

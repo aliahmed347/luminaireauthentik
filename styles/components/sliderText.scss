@@ -134,31 +134,28 @@
     .slider__text__slider__container {
       grid-column: 6/13;
       position: relative;
-      border-radius: 0.5rem;
+      border-top-left-radius: 0.5rem;
       width: 100%;
       overflow: hidden;
-      // Remove background red after testing
 
       .slider__text__slider {
         display: flex;
         height: 100%;
         width: 100%;
-        // GSAP will handle the transform
         will-change: transform;
 
         .slider__text__slide {
-          flex-shrink: 0; // Prevent slides from shrinking
+          flex-shrink: 0;
           width: 46.7rem;
           margin-right: $gutter-10;
 
           &:last-child {
-            margin-right: 0; // Remove margin from last slide
+            margin-right: 0;
           }
 
           .slider__text__slide__media {
             width: 100%;
             overflow: hidden;
-            border-radius: 0.5rem;
             position: relative;
 
             &__image {
@@ -166,6 +163,13 @@
               height: auto;
               display: block;
               will-change: transform; // Optimize for animation
+            }
+
+            .product__button {
+              transform: scale(0.75);
+              transform-origin: left;
+              left: 1rem;
+              width: 100%;
             }
           }
 

@@ -22,7 +22,7 @@
   width: 100%;
   height: 5rem;
   border: 1px solid $color-frontier-fort;
-  border-radius: 0.5rem;
+ border-radius: $rounded-5;
   background-color: $color-herare;
   display: flex;
   justify-content: space-between;
@@ -185,7 +185,7 @@
   background-color: $color-herare;
   border: 1px solid $color-frontier-fort;
   border-top: 0;
-  border-radius: 0.5rem;
+ border-radius: $rounded-5;
   z-index: z("navigation_menu");
   transform: scaleY(0);
   transform-origin: top right;

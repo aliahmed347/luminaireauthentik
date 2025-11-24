@@ -28,7 +28,7 @@
     .product {
       width: calc(25% - 0.7rem);
       background-color: white;
-      border-radius: 0.5rem;
+     border-radius: $rounded-5;
       overflow: hidden;
       position: relative;
 

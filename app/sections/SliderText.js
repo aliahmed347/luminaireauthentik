@@ -7,9 +7,9 @@ import each from "lodash/each";
 gsap.registerPlugin(ScrollTrigger);
 
 export default class SliderText extends Component {
-    constructor() {
+    constructor(elementSelector = '.slider__text') {
         super({
-            element: '.slider__text',
+            element: elementSelector,
             elements: {
                 contentHeading: '.slider__text__content__heading',
                 contentText: '.slider__text__content__text',
@@ -41,6 +41,7 @@ export default class SliderText extends Component {
         this.setupSlider();
         this.setupAnimations();
         this.setupSliderControls();
+        this.setUpProductButtonAnimation();
     }
 
     splitText() {
@@ -119,9 +120,64 @@ export default class SliderText extends Component {
         });
     }
 
+    setUpProductButtonAnimation() {
+        each(this.elements.slides, (slide) => {
+            const buttonInner = slide.querySelector('.product__button__inner');
+            const productLinks = slide.querySelector('.product__links');
+            if (buttonInner && productLinks) {
+                this.setUpProductButtonHover(buttonInner, productLinks);
+            }
+        });
+    }
+
+    setUpProductButtonHover(buttonInner, productLinks) {
+        gsap.set(buttonInner, {
+            width: '10rem',
+            overflow: 'hidden'
+        });
+
+        gsap.set(productLinks, {
+            height: '0',
+            opacity: 0,
+            overflow: 'hidden'
+        });
+
+        buttonInner.addEventListener('mouseenter', () => {
+            gsap.to(buttonInner, {
+                width: '100%',
+                opacity: 1,
+                duration: 0.7,
+                ease: 'power1.out'
+            });
+
+            gsap.to(productLinks, {
+                height: 'auto',
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power1.out'
+            });
+        });
+
+        buttonInner.addEventListener('mouseleave', () => {
+            gsap.to(buttonInner, {
+                width: '10rem',
+                opacity: 1,
+                duration: 1,
+                ease: 'power1.out'
+            });
+
+            gsap.to(productLinks, {
+                height: '0',
+                opacity: 0, // Fixed: was 1, should be 0
+                duration: 0.7,
+                ease: 'power1.out'
+            });
+        });
+    }
+
     setupSlider() {
         this.totalSlides = this.elements.slides.length;
-        
+
         // Clone slides for infinite loop
         this.cloneSlides();
 
@@ -133,15 +189,15 @@ export default class SliderText extends Component {
         // Set initial pagination
         this.updatePagination();
 
-        // Re-query all slides (including clones)
-        this.allSlides = this.elements.slider.querySelectorAll('.slider__text__slide');
-        this.allSlideImages = this.elements.slider.querySelectorAll('.slider__text__slide__media__image');
-        this.allSlideTitles = this.elements.slider.querySelectorAll('.slider__text__slide__title');
+        // Re-query all slides (including clones) - SCOPED TO THIS INSTANCE
+        this.allSlides = this.element.querySelectorAll('.slider__text__slide');
+        this.allSlideImages = this.element.querySelectorAll('.slider__text__slide__media__image');
+        this.allSlideTitles = this.element.querySelectorAll('.slider__text__slide__title');
 
         // Set initial states for ALL slides (including clones)
         gsap.set(this.allSlideImages, { scale: 1.1 });
         gsap.set(this.allSlideTitles, { opacity: 0, y: 20 });
-        
+
         // Animate first slide elements
         gsap.to(this.allSlideImages[0], {
             scale: 1,
@@ -149,7 +205,7 @@ export default class SliderText extends Component {
             ease: 'expo.out',
             delay: 0.5
         });
-        
+
         gsap.to(this.allSlideTitles[0], {
             opacity: 1,
             y: 0,
@@ -162,7 +218,7 @@ export default class SliderText extends Component {
     cloneSlides() {
         // Clone all slides and append them to create seamless loop
         const slidesArray = Array.from(this.elements.slides);
-        
+
         slidesArray.forEach(slide => {
             const clone = slide.cloneNode(true);
             clone.classList.add('slide--clone');
@@ -233,25 +289,32 @@ export default class SliderText extends Component {
     }
 
     setupSliderControls() {
+        // Store bound handlers for cleanup
+        this.handleNext = () => this.goToNextSlide();
+        this.handlePrev = () => this.goToPrevSlide();
+        this.handleKeyboardBound = this.handleKeyboard.bind(this);
+
         // Next button
         if (this.elements.nextBtn) {
-            this.elements.nextBtn.addEventListener('click', () => {
-                this.goToNextSlide();
-            });
+            this.elements.nextBtn.addEventListener('click', this.handleNext);
         }
 
         // Previous button
         if (this.elements.prevBtn) {
-            this.elements.prevBtn.addEventListener('click', () => {
-                this.goToPrevSlide();
-            });
+            this.elements.prevBtn.addEventListener('click', this.handlePrev);
         }
 
-        // Optional: Add keyboard navigation
-        document.addEventListener('keydown', this.handleKeyboard.bind(this));
+        // Keyboard navigation - scoped to this instance
+        document.addEventListener('keydown', this.handleKeyboardBound);
     }
 
     handleKeyboard(e) {
+        // Only respond if slider is in viewport
+        const rect = this.element.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (!isInView) return;
+
         if (e.key === 'ArrowLeft') {
             this.goToPrevSlide();
         } else if (e.key === 'ArrowRight') {
@@ -283,7 +346,6 @@ export default class SliderText extends Component {
 
         // Get actual slide index for animations (wraps around)
         const actualSlideIndex = ((this.currentSlide % this.totalSlides) + this.totalSlides) % this.totalSlides;
-        const prevSlideIndex = ((actualSlideIndex - 1 + this.totalSlides) % this.totalSlides);
 
         // Animate slider container
         gsap.to(this.elements.slider, {
@@ -292,7 +354,7 @@ export default class SliderText extends Component {
             ease: 'power2.inOut',
             onComplete: () => {
                 this.isAnimating = false;
-                
+
                 // Reset position seamlessly when reaching clones
                 if (this.currentSlide >= this.totalSlides) {
                     // Jumped to clone at end, reset to beginning
@@ -353,7 +415,18 @@ export default class SliderText extends Component {
 
     destroy() {
         // Remove keyboard listener
-        document.removeEventListener('keydown', this.handleKeyboard.bind(this));
+        if (this.handleKeyboardBound) {
+            document.removeEventListener('keydown', this.handleKeyboardBound);
+        }
+
+        // Remove button listeners
+        if (this.elements.nextBtn && this.handleNext) {
+            this.elements.nextBtn.removeEventListener('click', this.handleNext);
+        }
+
+        if (this.elements.prevBtn && this.handlePrev) {
+            this.elements.prevBtn.removeEventListener('click', this.handlePrev);
+        }
 
         // Kill GSAP animations
         if (this.headingLinesWrapped && this.textLinesWrapped) {
@@ -370,7 +443,7 @@ export default class SliderText extends Component {
         }
 
         // Remove cloned slides
-        const clonedSlides = this.elements.slider.querySelectorAll('.slide--clone');
+        const clonedSlides = this.element.querySelectorAll('.slide--clone');
         clonedSlides.forEach(clone => clone.remove());
 
         // Kill ScrollTrigger instance
@@ -379,18 +452,5 @@ export default class SliderText extends Component {
                 trigger.kill();
             }
         });
-
-        // Clean up event listeners
-        if (this.elements.nextBtn) {
-            const nextBtn = this.elements.nextBtn;
-            const clonedNext = nextBtn.cloneNode(true);
-            nextBtn.parentNode.replaceChild(clonedNext, nextBtn);
-        }
-
-        if (this.elements.prevBtn) {
-            const prevBtn = this.elements.prevBtn;
-            const clonedPrev = prevBtn.cloneNode(true);
-            prevBtn.parentNode.replaceChild(clonedPrev, prevBtn);
-        }
     }
 }

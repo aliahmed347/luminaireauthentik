@@ -1,0 +1,60 @@
+@use "../utils/variables" as *;
+
+@use "../shared/titles" as *;
+@use "../shared/descriptions" as *;
+
+.text__media__v1 {
+  margin-top: 11rem;
+
+  &.--is__right {
+    margin-top: $gutter-10;
+    margin-bottom: 11rem;
+
+    .text__media__v1__container {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .text__media__v1__container {
+    display: flex;
+    align-items: center;
+    padding-inline: $gutter-10;
+    column-gap: $gutter-10;
+
+    & > * {
+      width: 50%;
+    }
+
+    .left__image__section {
+      .left__image__media {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border-radius: $rounded-5;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+      }
+    }
+
+    .right__content__section {
+      padding: 9rem 0;
+      padding-inline: 11.8rem;
+
+      .right__content__heading {
+        @extend %title-80;
+
+        margin-bottom: 0.6em;
+      }
+      .right__content__text {
+        @extend %description-15;
+
+        margin-bottom: 3rem;
+      }
+    }
+  }
+}

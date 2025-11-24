@@ -9,7 +9,7 @@
 
   .product__button__inner {
     background: white;
-    border-radius: 0.5rem;
+   border-radius: $rounded-5;
     width: 10rem;
     overflow: hidden;
     transition: all 0.2s ease;

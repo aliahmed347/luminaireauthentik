@@ -4,6 +4,7 @@
 
 .text__media__v2 {
   margin-top: 11rem;
+
   .text__media__v2__container {
     display: flex;
 
@@ -45,7 +46,7 @@
           overflow: hidden;
 
           img {
-            border-radius: 0.5rem;
+           border-radius: $rounded-5;
             width: 24.1rem;
           }
         }
