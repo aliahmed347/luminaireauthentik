@@ -16,18 +16,25 @@ export default class QuoteImagesTrail extends Component {
                 quoteImages: '.trail__images img',
                 firstBtn: '.first--btn',
                 secondBtn: '.second--btn',
+                quoteButtons: '.quote__buttons',
             }
         });
 
         this.currentImageIndex = 0;
         this.imageSources = [];
-        this.activeTrailImages = {}; // Changed to object to track by index
+        this.activeTrailImages = {};
         this.lastMousePosition = { x: 0, y: 0 };
         this.mouseThrottle = null;
-        this.throttleDelay = 100; // Show new image every 100ms
+        this.throttleDelay = 100;
+
+        // Get actual rem value in pixels
+        this.remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        this.imageSize = 24.7 * this.remInPixels; // Convert 24.7rem to pixels
+        this.halfImageSize = this.imageSize / 2;
 
         this.init();
     }
+
 
     init() {
         if (!this.element) return;
@@ -63,11 +70,9 @@ export default class QuoteImagesTrail extends Component {
             const lineInner = document.createElement('div');
             lineInner.classList.add('line__inner');
 
-            // Build HTML string to preserve spaces
             let lineHTML = '';
             each(words, (word, index) => {
                 lineHTML += word.outerHTML;
-                // Add space after each word except the last one
                 if (index < words.length - 1) {
                     lineHTML += ' ';
                 }
@@ -86,14 +91,13 @@ export default class QuoteImagesTrail extends Component {
         gsap.set(this.elements.firstBtn, { opacity: 0, scale: 0.5 });
         gsap.set(this.elements.secondBtn, { opacity: 0, scale: 0.5 });
 
-        // Create main timeline with ScrollTrigger
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: this.element,
-                start: 'top center', // Animation starts when top of section reaches center of viewport
+                start: 'top center',
                 end: 'top 20%',
                 toggleActions: 'play none none none',
-                // markers: true, // Uncomment to debug scroll trigger positions
+                // markers: true, 
             }
         });
 
@@ -106,7 +110,6 @@ export default class QuoteImagesTrail extends Component {
             }, index * 0.08);
         });
 
-        // Animate CTA button
         tl.to(this.elements.firstBtn, {
             opacity: 1,
             scale: 1,
@@ -114,7 +117,6 @@ export default class QuoteImagesTrail extends Component {
             ease: 'power1.out'
         }, 0.3);
 
-        // Animate CTA button
         tl.to(this.elements.secondBtn, {
             opacity: 1,
             scale: 1,
@@ -126,31 +128,71 @@ export default class QuoteImagesTrail extends Component {
     setupTrailImages() {
         if (!this.elements.trailImagesContainer) return;
 
-        // Collect all image sources
         this.elements.quoteImages.forEach((img) => {
             this.imageSources.push(img.src);
         });
 
-        // Hide the original container
         this.elements.trailImagesContainer.style.display = 'none';
     }
 
     setupMouseTracking() {
-        this.minDistance = 100; // distance in px between trail images
+        this.minDistance = 100;
 
         this.onMouseMove = (e) => {
             const dx = e.clientX - this.lastMousePosition.x;
             const dy = e.clientY - this.lastMousePosition.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            // Only create a new image if the mouse moved far enough
-            if (distance >= this.minDistance) {
-                this.createTrailImage(e.clientX, e.clientY);
+            // Always update last mouse position, even if we don't create an image
+            const shouldUpdatePosition = distance >= this.minDistance;
+
+            if (shouldUpdatePosition) {
+                // Check if mouse is over the buttons area - if yes, DON'T create any images
+                if (!this.isMouseOverButtons(e.clientX, e.clientY)) {
+                    this.createTrailImage(e.clientX, e.clientY);
+                }
+                // Update position regardless of whether we created an image
                 this.lastMousePosition = { x: e.clientX, y: e.clientY };
             }
         };
 
         this.element.addEventListener('mousemove', this.onMouseMove);
+    }
+
+    isMouseOverButtons(clientX, clientY) {
+        if (!this.elements.quoteButtons) return false;
+
+        const buttonsRect = this.elements.quoteButtons.getBoundingClientRect();
+
+        // Calculate the bounds of where the image would appear
+        const imageLeft = clientX - this.halfImageSize;
+        const imageRight = clientX + this.halfImageSize;
+        const imageTop = clientY - this.halfImageSize;
+        const imageBottom = clientY + this.halfImageSize;
+
+        // Add extra padding for safety
+        const padding = 10;
+
+        // Expand button area with padding
+        const buttonLeft = buttonsRect.left - padding;
+        const buttonRight = buttonsRect.right + padding;
+        const buttonTop = buttonsRect.top - padding;
+        const buttonBottom = buttonsRect.bottom + padding;
+
+        // Check if image bounds overlap with button bounds
+        // Overlap occurs when:
+        // - imageRight is past buttonLeft AND
+        // - imageLeft is before buttonRight AND
+        // - imageBottom is past buttonTop AND
+        // - imageTop is before buttonBottom
+        const wouldOverlap = (
+            imageRight > buttonLeft &&
+            imageLeft < buttonRight &&
+            imageBottom > buttonTop &&
+            imageTop < buttonBottom
+        );
+
+        return wouldOverlap;
     }
 
     createTrailImage(x, y) {
@@ -161,14 +203,22 @@ export default class QuoteImagesTrail extends Component {
 
         const imgElement = document.createElement('img');
         imgElement.src = imageSrc;
-        imgElement.style.position = 'fixed';
-        imgElement.style.left = x + 'px';
-        imgElement.style.top = y + 'px';
+
+        // Get the container's bounding rect
+        const containerRect = this.element.getBoundingClientRect();
+
+        // Calculate position relative to container
+        const relativeX = x - containerRect.left;
+        const relativeY = y - containerRect.top;
+
+        imgElement.style.position = 'absolute';
+        imgElement.style.left = relativeX + 'px';
+        imgElement.style.top = relativeY + 'px';
         imgElement.style.width = '24.7rem';
         imgElement.style.height = '24.7rem';
         imgElement.style.objectFit = 'cover';
         imgElement.style.pointerEvents = 'none';
-        imgElement.style.zIndex = '100';
+        imgElement.style.zIndex = '1'; // Changed from '100' to stay behind buttons
         imgElement.style.transform = 'translate(-50%, -50%)';
 
         this.element.appendChild(imgElement);
