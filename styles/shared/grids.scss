@@ -6,6 +6,12 @@
   grid-gap: $gutter-10;
 }
 
+%grid-10 {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: $gutter-10;
+}
+
 %grid-6 {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -18,3 +24,8 @@
   grid-gap: $gutter-10;
 }
 
+%grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: $gutter-10;
+}
