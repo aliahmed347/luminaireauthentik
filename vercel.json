@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/luminaires", "destination": "/luminaires.html" }
+  ]
+}
