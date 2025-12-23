@@ -1,0 +1,15 @@
+@use "../utils/variables" as *;
+
+@use "../shared/titles" as *;
+
+.luminaires__hero {
+  padding-inline: $gutter-10;
+  padding-top: 10rem;
+  margin-bottom: 4rem;
+
+  .luminaires__hero__title {
+    @extend %title-110;
+
+    text-align: center;
+  }
+}

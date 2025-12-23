@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
-import legacy from '@vitejs/plugin-legacy';
-import viteImagemin from 'vite-plugin-imagemin';
-import path from 'path';
+import { defineConfig } from 'vite'
+import legacy from '@vitejs/plugin-legacy'
+import viteImagemin from 'vite-plugin-imagemin'
+import path from 'path'
 
 export default defineConfig({
     root: '.',
@@ -16,11 +16,6 @@ export default defineConfig({
             svgo: { plugins: [{ removeViewBox: false }] },
         }),
     ],
-    css: {
-        preprocessorOptions: {
-
-        },
-    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './app'),
@@ -30,10 +25,13 @@ export default defineConfig({
     build: {
         outDir: 'dist',
         rollupOptions: {
-            input: './index.html',
+            input: {
+                main: path.resolve(__dirname, 'index.html'),
+                luminaires: path.resolve(__dirname, 'luminaires.html'),
+            },
         },
     },
     server: {
-        port: 5050
-    }
-});
+        port: 5050,
+    },
+})

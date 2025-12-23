@@ -2,6 +2,7 @@ import '../styles/index.scss';
 import Navigation from "./components/Navigation"
 import Preloader from "./components/Preloader"
 import Home from './pages/Home';
+import Luminaires from './pages/Luminaires';
 
 class App {
     constructor() {
@@ -24,15 +25,16 @@ class App {
     createPages() {
         this.pages = {
             "home": new Home(),
+            "luminaires": new Luminaires(),
         }
         this.page = this.pages[this.template]
         this.page.create()
     }
 
     createPreloader() {
-        this.preloader = new Preloader()
-        this.preloader.once('completed', () => this.createPages());
-        // this.createPages()
+        // this.preloader = new Preloader()
+        // this.preloader.once('completed', () => this.createPages());
+        this.createPages()
     }
 
     onPreloader() {
