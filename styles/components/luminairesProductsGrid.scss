@@ -177,8 +177,6 @@
       width: 100%;
       max-width: 100%;
       display: grid;
-      gap: 2rem;
-      padding-right: $gutter-10;
       transition: all 0.4s cubic-bezier(0.3, 0, 0, 1);
 
       // 4 column grid (default)
@@ -189,17 +187,6 @@
       // 2 column grid
       &.grid-2 {
         grid-template-columns: repeat(2, 1fr);
-        gap: 3rem;
-
-        .product {
-          .product__link {
-            .product__content__wrapper {
-              .product__image__media {
-                padding-inline: 3rem;
-              }
-            }
-          }
-        }
       }
 
       .product {
