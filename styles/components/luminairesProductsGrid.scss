@@ -1,5 +1,4 @@
 @use "../utils/variables" as *;
-
 @use "../shared/descriptions" as *;
 @use "../shared/grids" as *;
 
@@ -31,7 +30,7 @@
         display: inline-block;
         position: relative;
 
-        ::before {
+        &::before {
           content: "";
           position: absolute;
           top: 50%;
@@ -42,6 +41,11 @@
           height: 70%;
           border-radius: 8.5rem;
           z-index: -1;
+          transition: left 0.7s cubic-bezier(0.3, 0, 0, 1);
+        }
+
+        &.right::before {
+          left: calc(50% - 0.2rem);
         }
 
         .view__btn {
@@ -52,14 +56,17 @@
           vertical-align: middle;
           text-align: center;
           cursor: pointer;
+          transition: all 0.3s ease;
 
           &.active {
             svg rect {
               fill: $color-blackish-brown;
             }
           }
+
           svg rect {
             fill: $color-frontier-fort;
+            transition: fill 0.3s ease;
           }
         }
       }
@@ -121,8 +128,8 @@
             content: "";
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
             right: 1rem;
+            transform: translateY(-50%);
             width: 1.7rem;
             height: 0.2rem;
             background-color: $color-blackish-brown;
@@ -147,6 +154,13 @@
 
           .filter__accordion__filter {
             @extend %description-14;
+            padding: 0.8rem 0;
+            cursor: pointer;
+            transition: color 0.2s ease;
+
+            &:hover {
+              color: $color-frontier-fort;
+            }
           }
         }
 
@@ -162,8 +176,31 @@
       grid-column: 3/13;
       width: 100%;
       max-width: 100%;
-      grid: template rows 1fr;
+      display: grid;
+      gap: 2rem;
       padding-right: $gutter-10;
+      transition: all 0.4s cubic-bezier(0.3, 0, 0, 1);
+
+      // 4 column grid (default)
+      &.grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      // 2 column grid
+      &.grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+
+        .product {
+          .product__link {
+            .product__content__wrapper {
+              .product__image__media {
+                padding-inline: 3rem;
+              }
+            }
+          }
+        }
+      }
 
       .product {
         width: 100%;
@@ -256,6 +293,7 @@
                 text-transform: capitalize;
                 margin-bottom: 0.4rem;
               }
+
               .product__name,
               .product__price {
                 @extend %description-15;
@@ -307,6 +345,7 @@
                   height: 5rem;
                   width: 5rem;
                 }
+
                 .product__heading {
                   margin: 0.5em 1rem 0.5em 0;
 
@@ -315,6 +354,7 @@
 
                     text-transform: capitalize;
                   }
+
                   .product__name {
                     @extend %description-15;
 
