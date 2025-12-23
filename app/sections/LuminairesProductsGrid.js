@@ -1,5 +1,4 @@
 import Component from "../classes/Component";
-import { split, calculate } from "../utils/text";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import each from "lodash/each";
@@ -22,7 +21,10 @@ export default class LuminairesProductsGrid extends Component {
 
     init() {
         if (!this.element) return;
+
         this.setupAnimations()
+
+        this.setupFiltersToggle();
     }
 
 
@@ -73,6 +75,29 @@ export default class LuminairesProductsGrid extends Component {
         }, 0.5);
 
     }
+
+
+    setupFiltersToggle() {
+        // Loop over each filter element
+        each(this.elements.productsFilters.children, (child) => {
+            const button = child.querySelector('.filter__button');
+            const body = child.querySelector('.filter__accordion__body');
+
+            button.addEventListener('click', () => {
+                child.classList.toggle('active');
+
+                if (child.classList.contains('active')) {
+                    body.style.maxHeight = body.scrollHeight / 10 + 'rem';
+                } else {
+                    body.style.maxHeight = '0';
+                }
+            });
+        });
+    }
+
+
+
+
 
 
     destroy() {

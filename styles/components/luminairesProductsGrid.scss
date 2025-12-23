@@ -126,6 +126,7 @@
             width: 1.7rem;
             height: 0.2rem;
             background-color: $color-blackish-brown;
+            transition: 0.4s transform cubic-bezier(0.3, 0, 0, 1);
           }
 
           &::before {
@@ -140,8 +141,9 @@
         }
 
         .filter__accordion__body {
-          height: 0;
+          max-height: 0;
           overflow: hidden;
+          transition: 0.7s max-height cubic-bezier(0.3, 0, 0, 1);
 
           .filter__accordion__filter {
             @extend %description-14;
@@ -149,7 +151,7 @@
         }
 
         &.active .filter__accordion__body {
-          height: auto;
+          max-height: 100vh;
         }
       }
     }
