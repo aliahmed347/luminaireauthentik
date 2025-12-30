@@ -9,7 +9,13 @@
   outline: none;
   line-height: 1.71;
   overflow: hidden;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: all 0.5s ease, color 0.5s ease;
+  border: none;
+  outline: none;
+
+  &:active {
+    transform: scale(0.95);
+  }
 
   &:hover {
     background-color: $color-apricot-ice;

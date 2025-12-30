@@ -3,6 +3,7 @@ import Navigation from "./components/Navigation"
 import Preloader from "./components/Preloader"
 import Home from './pages/Home';
 import Luminaires from './pages/Luminaires';
+import Product from './pages/Product';
 
 class App {
     constructor() {
@@ -26,15 +27,16 @@ class App {
         this.pages = {
             "home": new Home(),
             "luminaires": new Luminaires(),
+            "product": new Product(),
         }
         this.page = this.pages[this.template]
         this.page.create()
     }
 
     createPreloader() {
-        // this.preloader = new Preloader()
-        // this.preloader.once('completed', () => this.createPages());
-        this.createPages()
+        this.preloader = new Preloader()
+        this.preloader.once('completed', () => this.createPages());
+        // this.createPages()
     }
 
     onPreloader() {
