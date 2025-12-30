@@ -30,6 +30,7 @@ export default class SliderText extends Component {
         this.currentSlide = 0;
         this.totalSlides = 0;
         this.isAnimating = false;
+        this.isOnlySlider = this.element?.classList.contains('--only__slider');
 
         this.init();
     }
@@ -37,7 +38,11 @@ export default class SliderText extends Component {
     init() {
         if (!this.element) return;
 
-        this.splitText();
+
+        if (!this.isOnlySlider) {
+            this.splitText();
+        }
+
         this.setupSlider();
         this.setupAnimations();
         this.setupSliderControls();
@@ -45,24 +50,24 @@ export default class SliderText extends Component {
     }
 
     splitText() {
-        // Split heading into spans
+
         split({ element: this.elements.contentHeading, append: true });
 
-        // Calculate heading lines based on position
+
         const headingSpans = this.elements.contentHeading.querySelectorAll('span');
         this.headingLines = calculate(headingSpans);
 
-        // Wrap heading lines
+
         this.wrapHeadingLines();
 
-        // Split content text into spans
+
         split({ element: this.elements.contentText, append: true });
 
-        // Calculate text lines
+
         const textSpans = this.elements.contentText.querySelectorAll('span');
         this.textLines = calculate(textSpans);
 
-        // Wrap text lines
+
         this.wrapTextLines();
     }
 
@@ -168,7 +173,7 @@ export default class SliderText extends Component {
 
             gsap.to(productLinks, {
                 height: '0',
-                opacity: 0, // Fixed: was 1, should be 0
+                opacity: 0,
                 duration: 0.7,
                 ease: 'power1.out'
             });
@@ -178,27 +183,27 @@ export default class SliderText extends Component {
     setupSlider() {
         this.totalSlides = this.elements.slides.length;
 
-        // Clone slides for infinite loop
+
         this.cloneSlides();
 
-        // Update pagination total
+
         if (this.elements.paginationTotal) {
             this.elements.paginationTotal.textContent = String(this.totalSlides).padStart(2, '0');
         }
 
-        // Set initial pagination
+
         this.updatePagination();
 
-        // Re-query all slides (including clones) - SCOPED TO THIS INSTANCE
+
         this.allSlides = this.element.querySelectorAll('.slider__text__slide');
         this.allSlideImages = this.element.querySelectorAll('.slider__text__slide__media__image');
         this.allSlideTitles = this.element.querySelectorAll('.slider__text__slide__title');
 
-        // Set initial states for ALL slides (including clones)
+
         gsap.set(this.allSlideImages, { scale: 1.1 });
         gsap.set(this.allSlideTitles, { opacity: 0, y: 20 });
 
-        // Animate first slide elements
+
         gsap.to(this.allSlideImages[0], {
             scale: 1,
             duration: 1.4,
@@ -216,7 +221,7 @@ export default class SliderText extends Component {
     }
 
     cloneSlides() {
-        // Clone all slides and append them to create seamless loop
+
         const slidesArray = Array.from(this.elements.slides);
 
         slidesArray.forEach(slide => {
@@ -227,92 +232,136 @@ export default class SliderText extends Component {
     }
 
     setupAnimations() {
-        // Set initial states
-        gsap.set(this.headingLinesWrapped, { y: '100%' });
-        gsap.set(this.textLinesWrapped, { y: '100%' });
-        gsap.set(this.elements.contentCta, { opacity: 0, y: 20 });
-        gsap.set(this.elements.pagination, { opacity: 0, y: -20 });
-        gsap.set(this.elements.navigationBtns, { opacity: 0, y: 20 });
+        if (this.isOnlySlider) {
 
-        // Create main timeline with ScrollTrigger
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: this.element,
-                start: 'top center',
-                end: 'top 20%',
-                toggleActions: 'play none none none',
-                // markers: true, // Uncomment to debug
+            gsap.set(this.elements.pagination, { opacity: 0, x: 20 });
+
+
+            const sliderNavigation = this.element.querySelector('.slider__text__slider__container > .slider__text__navigation');
+            if (sliderNavigation) {
+                gsap.set(sliderNavigation, { opacity: 0, x: 20 });
             }
-        });
 
-        // Animate heading lines with stagger
-        each(this.headingLinesWrapped, (line, index) => {
-            tl.to(line, {
-                y: '0%',
-                duration: 1.2,
-                ease: 'expo.out'
-            }, index * 0.08);
-        });
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: this.element,
+                    start: 'top center',
+                    end: 'top 20%',
+                    toggleActions: 'play none none none',
+                }
+            });
 
-        // Animate text lines with stagger
-        each(this.textLinesWrapped, (line, index) => {
-            tl.to(line, {
-                y: '0%',
-                duration: 1,
-                ease: 'expo.out'
-            }, 0.3 + (index * 0.06));
-        });
 
-        // Animate CTA button
-        tl.to(this.elements.contentCta, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out'
-        }, 0.5);
+            tl.to(this.elements.pagination, {
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            }, 0.3);
 
-        // Animate pagination
-        tl.to(this.elements.pagination, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out'
-        }, 0.6);
 
-        // Animate navigation buttons
-        tl.to(this.elements.navigationBtns, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out'
-        }, 0.7);
+            if (sliderNavigation) {
+                tl.to(sliderNavigation, {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                }, 0.5);
+            }
+        } else {
+
+            gsap.set(this.headingLinesWrapped, { y: '100%' });
+            gsap.set(this.textLinesWrapped, { y: '100%' });
+            gsap.set(this.elements.contentCta, { opacity: 0, y: 20 });
+            gsap.set(this.elements.pagination, { opacity: 0, y: -20 });
+            gsap.set(this.elements.navigationBtns, { opacity: 0, y: 20 });
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: this.element,
+                    start: 'top center',
+                    end: 'top 20%',
+                    toggleActions: 'play none none none',
+                }
+            });
+
+
+            each(this.headingLinesWrapped, (line, index) => {
+                tl.to(line, {
+                    y: '0%',
+                    duration: 1.2,
+                    ease: 'expo.out'
+                }, index * 0.08);
+            });
+
+
+            each(this.textLinesWrapped, (line, index) => {
+                tl.to(line, {
+                    y: '0%',
+                    duration: 1,
+                    ease: 'expo.out'
+                }, 0.3 + (index * 0.06));
+            });
+
+
+            tl.to(this.elements.contentCta, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            }, 0.5);
+
+
+            tl.to(this.elements.pagination, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                ease: 'power2.out'
+            }, 0.6);
+
+
+            tl.to(this.elements.navigationBtns, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                ease: 'power2.out'
+            }, 0.7);
+        }
     }
 
     setupSliderControls() {
-        // Store bound handlers for cleanup
+
         this.handleNext = () => this.goToNextSlide();
         this.handlePrev = () => this.goToPrevSlide();
         this.handleKeyboardBound = this.handleKeyboard.bind(this);
 
-        // Next button
-        if (this.elements.nextBtn) {
-            this.elements.nextBtn.addEventListener('click', this.handleNext);
-        }
 
-        // Previous button
-        if (this.elements.prevBtn) {
-            this.elements.prevBtn.addEventListener('click', this.handlePrev);
-        }
+        const allNextBtns = this.element.querySelectorAll('.slide__next');
+        const allPrevBtns = this.element.querySelectorAll('.slide__pervious');
 
-        // Keyboard navigation - scoped to this instance
+
+        allNextBtns.forEach(btn => {
+            btn.addEventListener('click', this.handleNext);
+        });
+
+
+        allPrevBtns.forEach(btn => {
+            btn.addEventListener('click', this.handlePrev);
+        });
+
+
+        this.allNextBtns = allNextBtns;
+        this.allPrevBtns = allPrevBtns;
+
+
         document.addEventListener('keydown', this.handleKeyboardBound);
     }
 
     handleKeyboard(e) {
-        // Only respond if slider is in viewport
+
         const rect = this.element.getBoundingClientRect();
         const isInView = rect.top < window.innerHeight && rect.bottom > 0;
-        
+
         if (!isInView) return;
 
         if (e.key === 'ArrowLeft') {
@@ -339,15 +388,15 @@ export default class SliderText extends Component {
     animateSlide(direction) {
         this.isAnimating = true;
 
-        // Calculate slide width (slide width + gap)
+
         const slideWidth = this.allSlides[0].offsetWidth;
         const gap = parseFloat(getComputedStyle(this.allSlides[0]).marginRight);
         const offset = -(slideWidth + gap) * this.currentSlide;
 
-        // Get actual slide index for animations (wraps around)
+
         const actualSlideIndex = ((this.currentSlide % this.totalSlides) + this.totalSlides) % this.totalSlides;
 
-        // Animate slider container
+
         gsap.to(this.elements.slider, {
             x: offset,
             duration: 1,
@@ -355,13 +404,11 @@ export default class SliderText extends Component {
             onComplete: () => {
                 this.isAnimating = false;
 
-                // Reset position seamlessly when reaching clones
+
                 if (this.currentSlide >= this.totalSlides) {
-                    // Jumped to clone at end, reset to beginning
                     this.currentSlide = 0;
                     gsap.set(this.elements.slider, { x: 0 });
                 } else if (this.currentSlide < 0) {
-                    // Jumped before beginning, reset to end
                     this.currentSlide = this.totalSlides - 1;
                     const resetOffset = -(slideWidth + gap) * this.currentSlide;
                     gsap.set(this.elements.slider, { x: resetOffset });
@@ -369,7 +416,7 @@ export default class SliderText extends Component {
             }
         });
 
-        // Animate out previous slide elements
+
         const prevSlideActual = this.currentSlide - 1;
         if (prevSlideActual >= 0) {
             gsap.to(this.allSlideImages[prevSlideActual], {
@@ -386,7 +433,7 @@ export default class SliderText extends Component {
             });
         }
 
-        // Animate in current slide elements
+
         gsap.to(this.allSlideImages[this.currentSlide], {
             scale: 1,
             duration: 1.2,
@@ -402,7 +449,7 @@ export default class SliderText extends Component {
             delay: 0.4
         });
 
-        // Update pagination with actual slide number
+
         this.updatePagination(actualSlideIndex);
     }
 
@@ -414,39 +461,54 @@ export default class SliderText extends Component {
     }
 
     destroy() {
-        // Remove keyboard listener
+
         if (this.handleKeyboardBound) {
             document.removeEventListener('keydown', this.handleKeyboardBound);
         }
 
-        // Remove button listeners
-        if (this.elements.nextBtn && this.handleNext) {
-            this.elements.nextBtn.removeEventListener('click', this.handleNext);
+
+        if (this.allNextBtns) {
+            this.allNextBtns.forEach(btn => {
+                btn.removeEventListener('click', this.handleNext);
+            });
         }
 
-        if (this.elements.prevBtn && this.handlePrev) {
-            this.elements.prevBtn.removeEventListener('click', this.handlePrev);
+        if (this.allPrevBtns) {
+            this.allPrevBtns.forEach(btn => {
+                btn.removeEventListener('click', this.handlePrev);
+            });
         }
 
-        // Kill GSAP animations
-        if (this.headingLinesWrapped && this.textLinesWrapped) {
-            gsap.killTweensOf([
+
+        const elementsToKill = [
+            this.elements.pagination,
+            this.elements.slider,
+            ...this.allSlideImages,
+            ...this.allSlideTitles
+        ];
+
+        if (!this.isOnlySlider && this.headingLinesWrapped && this.textLinesWrapped) {
+            elementsToKill.push(
                 ...this.headingLinesWrapped,
                 ...this.textLinesWrapped,
                 this.elements.contentCta,
-                this.elements.pagination,
-                this.elements.navigationBtns,
-                this.elements.slider,
-                ...this.allSlideImages,
-                ...this.allSlideTitles
-            ]);
+                this.elements.navigationBtns
+            );
+        } else {
+
+            const sliderNavigation = this.element.querySelector('.slider__text__slider__container > .slider__text__navigation');
+            if (sliderNavigation) {
+                elementsToKill.push(sliderNavigation);
+            }
         }
 
-        // Remove cloned slides
+        gsap.killTweensOf(elementsToKill);
+
+
         const clonedSlides = this.element.querySelectorAll('.slide--clone');
         clonedSlides.forEach(clone => clone.remove());
 
-        // Kill ScrollTrigger instance
+
         ScrollTrigger.getAll().forEach(trigger => {
             if (trigger.trigger === this.element) {
                 trigger.kill();

@@ -1,3 +1,7 @@
 @use "../components/productDetails";
 
 @use "../components/textMediaV1";
+
+.product .slider__text:not(:last-child) {
+  padding-bottom: 11rem;
+}

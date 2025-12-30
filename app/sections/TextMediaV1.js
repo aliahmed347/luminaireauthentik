@@ -7,9 +7,9 @@ import each from "lodash/each";
 gsap.registerPlugin(ScrollTrigger);
 
 export default class TextMediaV1 extends Component {
-    constructor(elementSelector = '.text__media__v1') { // Add parameter with default
+    constructor(elementSelector = '.text__media__v1') {
         super({
-            element: elementSelector, // Use the parameter
+            element: elementSelector,
             elements: {
                 title: '.right__content__heading',
                 contentText: '.right__content__text',
@@ -33,7 +33,7 @@ export default class TextMediaV1 extends Component {
     }
 
     splitText() {
-        // Split title into spans
+        // Only split title into spans
         split({ element: this.elements.title, append: true });
 
         // Calculate title lines based on position
@@ -43,15 +43,7 @@ export default class TextMediaV1 extends Component {
         // Wrap title lines
         this.wrapTitleLines();
 
-        // Split content text into spans
-        split({ element: this.elements.contentText, append: true });
-
-        // Calculate text lines
-        const textSpans = this.elements.contentText.querySelectorAll('span');
-        this.textLines = calculate(textSpans);
-
-        // Wrap text lines
-        this.wrapTextLines();
+        // Don't split the paragraph text - leave it as is
     }
 
     wrapTitleLines() {
@@ -81,37 +73,10 @@ export default class TextMediaV1 extends Component {
         });
     }
 
-    wrapTextLines() {
-        this.elements.contentText.innerHTML = '';
-        this.textLinesWrapped = [];
-
-        each(this.textLines, (words) => {
-            const lineDiv = document.createElement('div');
-            lineDiv.classList.add('line');
-            lineDiv.style.overflow = 'hidden';
-
-            const lineInner = document.createElement('div');
-            lineInner.classList.add('line__inner');
-
-            let lineHTML = '';
-            each(words, (word, index) => {
-                lineHTML += word.outerHTML;
-                if (index < words.length - 1) {
-                    lineHTML += ' ';
-                }
-            });
-            lineInner.innerHTML = lineHTML;
-
-            lineDiv.appendChild(lineInner);
-            this.elements.contentText.appendChild(lineDiv);
-            this.textLinesWrapped.push(lineInner);
-        });
-    }
-
     setupAnimations() {
         // Set initial states
         gsap.set(this.titleLinesWrapped, { y: '100%' });
-        gsap.set(this.textLinesWrapped, { y: '100%' });
+        gsap.set(this.elements.contentText, { opacity: 0, y: 30 }); // Animate paragraph as whole
         gsap.set(this.elements.leftImage, {
             clipPath: 'polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%)',
         });
@@ -129,17 +94,17 @@ export default class TextMediaV1 extends Component {
         // Create main timeline with ScrollTrigger
         const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: this.element, // This now correctly targets the specific instance
+                trigger: this.element,
                 start: 'top center',
                 end: 'top 20%',
                 toggleActions: 'play none none none',
-                // markers: true, // Uncomment to debug
+                // markers: true,
             }
         });
 
-        // Animate image scale in
+        // Animate image clip-path
         tl.to(this.elements.leftImage, {
-            clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', // Expands to full width
+            clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
             duration: 1.5,
             ease: 'expo.out'
         }, 0);
@@ -153,14 +118,13 @@ export default class TextMediaV1 extends Component {
             }, 0.3 + (index * 0.08));
         });
 
-        // Animate text lines with stagger
-        each(this.textLinesWrapped, (line, index) => {
-            tl.to(line, {
-                y: '0%',
-                duration: 1,
-                ease: 'expo.out'
-            }, 0.5 + (index * 0.06));
-        });
+        // Animate entire paragraph text as one element
+        tl.to(this.elements.contentText, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power2.out'
+        }, 0.6);
 
         // Animate CTA button if exists
         if (this.elements.contentCta) {
@@ -169,7 +133,7 @@ export default class TextMediaV1 extends Component {
                 y: 0,
                 duration: 0.8,
                 ease: 'power2.out'
-            }, 0.7);
+            }, 0.8);
         }
 
         // Animate product button if exists
@@ -179,7 +143,7 @@ export default class TextMediaV1 extends Component {
                 scale: 1,
                 duration: 0.8,
                 ease: 'back.out(1.2)'
-            }, 0.6);
+            }, 0.7);
         }
     }
 
@@ -242,28 +206,30 @@ export default class TextMediaV1 extends Component {
 
     destroy() {
         // Kill all GSAP animations
-        if (this.titleLinesWrapped && this.textLinesWrapped) {
-            const elementsToKill = [
-                ...this.titleLinesWrapped,
-                ...this.textLinesWrapped,
-                this.elements.leftImage
-            ];
+        const elementsToKill = [
+            this.elements.leftImage,
+            this.elements.contentText
+        ];
 
-            // Add optional elements if they exist
-            if (this.elements.contentCta) {
-                elementsToKill.push(this.elements.contentCta);
-            }
-
-            if (this.elements.productButtonInner) {
-                elementsToKill.push(this.elements.productButtonInner);
-            }
-
-            if (this.elements.productLinks) {
-                elementsToKill.push(this.elements.productLinks);
-            }
-
-            gsap.killTweensOf(elementsToKill);
+        // Add title lines if they exist
+        if (this.titleLinesWrapped) {
+            elementsToKill.push(...this.titleLinesWrapped);
         }
+
+        // Add optional elements if they exist
+        if (this.elements.contentCta) {
+            elementsToKill.push(this.elements.contentCta);
+        }
+
+        if (this.elements.productButtonInner) {
+            elementsToKill.push(this.elements.productButtonInner);
+        }
+
+        if (this.elements.productLinks) {
+            elementsToKill.push(this.elements.productLinks);
+        }
+
+        gsap.killTweensOf(elementsToKill);
 
         // Remove product button event listeners if they exist
         if (this.elements.productButtonInner && this.handleButtonEnter && this.handleButtonLeave) {

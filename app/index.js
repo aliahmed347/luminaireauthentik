@@ -34,9 +34,14 @@ class App {
     }
 
     createPreloader() {
-        this.preloader = new Preloader()
-        this.preloader.once('completed', () => this.createPages());
-        // this.createPages()
+        if (this.template === "home") {
+
+            this.preloader = new Preloader()
+            this.preloader.once('completed', () => this.createPages());
+            // this.createPages()
+        } else {
+            this.createPages()
+        }
     }
 
     onPreloader() {

@@ -61,7 +61,7 @@
           .slider__btn {
             width: 5rem;
             height: 5rem;
-            background-color: $color-apricot-ice;
+            background-color: transparent;
             border-radius: 10rem;
             position: relative;
             overflow: hidden;
@@ -69,6 +69,7 @@
             cursor: pointer;
             color: $color-blackish-brown;
             transition: background-color 0.3s ease;
+            border: 0.1rem solid $color-blackish-brown;
 
             &:hover {
               background-color: $color-blackish-brown;
@@ -162,7 +163,7 @@
               width: 100%;
               height: auto;
               display: block;
-              will-change: transform; // Optimize for animation
+              will-change: transform;
             }
 
             .product__button {
@@ -178,10 +179,131 @@
 
             margin-top: 1.5rem;
             color: $color-blackish-brown;
-            // Initial state handled by GSAP
           }
         }
       }
+
+      > .slider__text__navigation {
+        display: none;
+      }
+    }
+  }
+
+  &.--only__slider {
+    .slider__text__container {
+      display: block;
+      position: relative;
+    }
+
+    .slider__text__content {
+      display: none;
+    }
+
+    .slider__text__slider__container {
+      grid-column: unset;
+      width: 100%;
+      padding-inline: $gutter-10;
+      position: relative;
+
+      .slider__text__slider {
+        .slider__text__slide {
+          width: 46.7rem;
+        }
+      }
+
+      > .slider__text__navigation {
+        display: block;
+        left: auto;
+        position: relative;
+        padding-inline: $gutter-10;
+        z-index: 10;
+        margin-top: 3rem;
+        text-align: right;
+
+        .slider__btns {
+          display: flex;
+          gap: $gutter-10;
+          justify-content: flex-end;
+
+          .slider__btn {
+            width: 5rem;
+            height: 5rem;
+            background-color: transparent;
+            border-radius: 10rem;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            color: $color-blackish-brown;
+            transition: background-color 0.3s ease;
+            border: 0.1rem solid $color-blackish-brown;
+
+            &:hover {
+              background-color: $color-blackish-brown;
+              color: $color-apricot-ice;
+            }
+
+            span {
+              @extend %center;
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: transform 0.5s ease;
+
+              svg {
+                width: 2rem;
+                height: 2rem;
+              }
+
+              &:nth-child(1) {
+                transform: translateX(0);
+              }
+
+              &:nth-child(2) {
+                transform: translateX(100%);
+              }
+            }
+          }
+
+          .slide__next:hover {
+            span:nth-child(1) {
+              transform: translateX(-100%);
+            }
+
+            span:nth-child(2) {
+              transform: translateX(0);
+            }
+          }
+
+          .slide__pervious {
+            span:nth-child(2) {
+              transform: translateX(-100%);
+            }
+
+            &:hover {
+              span:nth-child(1) {
+                transform: translateX(100%);
+              }
+
+              span:nth-child(2) {
+                transform: translateX(0);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .slider__text__pagination {
+      position: absolute;
+      top: 4rem;
+      right: $gutter-10;
+      z-index: 10;
     }
   }
 }
