@@ -28,6 +28,7 @@ export default defineConfig({
             input: {
                 main: path.resolve(__dirname, 'index.html'),
                 luminaires: path.resolve(__dirname, 'luminaires.html'),
+                product: path.resolve(__dirname, 'product.html'),
             },
         },
     },
